@@ -1,0 +1,37 @@
+name: Kawaii PR Reviewer
+
+# 1. Trigger: Chỉ kích hoạt khi có Pull Request đòi vào nhà (nhánh main)
+on:
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  review-code:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Lấy code về nha 📥
+      uses: actions/checkout@v4
+
+    - name: Cài đặt môi trường Java 17 ☕
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: 'maven'
+
+    - name: Chạy Test để chắc chắn code không bị hỏng 🚀
+      run: mvn -B clean test
+
+    - name: Soi lỗi định dạng (Checkstyle) 🕵️‍♀️
+      # Chạy kiểm tra định dạng và sinh ra file báo cáo dạng XML
+      run: mvn -B checkstyle:checkstyle
+      continue-on-error: true # Dù có lỗi thì vẫn chạy tiếp để bot còn comment nha!
+
+    # 2. Inline Feedback: Bot tự động cằn nhằn vào code của Senpai 📝
+    - name: Bot dán comment vào Pull Request 🎀
+      uses: reviewdog/action-checkstyle@v1
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        reporter: github-pr-review # Chế độ comment thẳng vào dòng code lỗi!
+        checkstyle_report: target/checkstyle-result.xml
