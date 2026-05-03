@@ -5,6 +5,10 @@ on:
   pull_request:
     branches: [ "main" ]
 
+permissions:
+  contents: read        # Cho phép Bot đọc code
+  pull-requests: write  # Cho phép Bot được chê bai và cằn nhằn!
+
 jobs:
   review-code:
     runs-on: ubuntu-latest
@@ -34,3 +38,4 @@ jobs:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         reporter: github-pr-review # Chế độ comment thẳng vào dòng code lỗi!
         checkstyle_report: target/checkstyle-result.xml
+        fail_on_error: true # Nhớ giữ lại
