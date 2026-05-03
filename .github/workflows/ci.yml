@@ -26,11 +26,10 @@ jobs:
     - name: Soi lỗi định dạng (Checkstyle) 🕵️‍♀️
       # Chạy kiểm tra định dạng và sinh ra file báo cáo dạng XML
       run: mvn -B checkstyle:checkstyle
-      continue-on-error: true # Dù có lỗi thì vẫn chạy tiếp để bot còn comment nha!
+      continue-on-error: true # Dù có lỗi thì vẫn chạy tiếp để bot còn comment 
 
-    # 2. Inline Feedback: Bot tự động cằn nhằn vào code của Senpai 📝
     - name: Bot dán comment vào Pull Request 🎀
-      uses: reviewdog/action-checkstyle@v1
+      uses: dbelyaev/action-checkstyle@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         reporter: github-pr-review # Chế độ comment thẳng vào dòng code lỗi!
